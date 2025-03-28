@@ -13,4 +13,13 @@ module.exports = defineConfig({
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
   },
+  plugins: [
+    {
+      resolve: "@medusajs/medusa-payment-stripe",
+      options: {
+        api_key: process.env.STRIPE_SECRET_KEY,
+        //  webhook_secret: process.env.STRIPE_WEBHOOK_SECRET || "", // Empty if webhooks are not used
+      },
+    },
+  ],
 });
