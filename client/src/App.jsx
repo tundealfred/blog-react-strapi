@@ -18,7 +18,7 @@ const App = () => {
         <Route path="/blog/:id" element={<BlogPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignupPage />} />
-        <PrivateRoute path="/admin" component={AdminDashboard} />
+        {/* <PrivateRoute path="/admin" component={AdminDashboard} /> */}
       </Routes>
       <Footer />
     </Router>
