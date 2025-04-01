@@ -7,9 +7,10 @@ const API_URL = "http://localhost:1337/api"; // Update if your Strapi is running
 export const fetchBlogs = async () => {
   try {
     const response = await axios.get(`${API_URL}/blogs?populate=*`);
+    console.log("Fetched data:", response.data.data); // Debugging
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching blogs:", error);
+    console.error("Error fetching blogs:", error.message);
     return [];
   }
 };
