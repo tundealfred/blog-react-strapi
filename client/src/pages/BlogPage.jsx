@@ -77,9 +77,11 @@ const BlogPage = () => {
       <p className="text-gray-600 text-sm mt-2">{category}</p>
       <p className="text-gray-500 text-sm">
         Published on:{" "}
-        {publishedAt ? new Date(publishedAt).toLocaleDateString() : "Unknown"}
+        {publishedAt
+          ? new Date(publishedAt).toLocaleDateString("en-GB")
+          : "Unknown"}
       </p>
-      <div className="mt-6 text-lg text-gray-800 leading-relaxed">
+      <div className="mt-6 text-lg text-gray-800 leading-relaxed text-justify">
         {content.length > 0 ? (
           content.map((item, index) => (
             <p key={index}>

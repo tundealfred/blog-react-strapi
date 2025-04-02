@@ -25,7 +25,7 @@ const BlogCard = ({ blog }) => {
         <h2 className="text-xl font-semibold text-gray-800">{blog.title}</h2>
         <p className="text-gray-600 mt-2">{blog.category}</p>
         <p className="text-gray-500 text-sm">
-          {new Date(blog.publishedAt).toLocaleDateString()}
+          {new Date(blog.publishedAt).toLocaleDateString("en-GB")}
         </p>
         <Link
           to={`/blog/${blog.documentId}`}
