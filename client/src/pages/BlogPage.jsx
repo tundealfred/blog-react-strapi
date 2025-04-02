@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { motion } from "framer-motion";
+import {
+  fetchBlogById,
+  fetchLikes,
+  postLike,
+  fetchComments,
+  postComment,
+} from "../services/api"; // Import functions from api.js
 
 const BlogPage = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     if (!id) {
@@ -14,27 +23,22 @@ const BlogPage = () => {
       return;
     }
 
-    const apiUrl = `http://localhost:1337/api/blogs?filters[documentId][$eq]=${id}&populate=*`;
-    //console.log("Fetching blog from:", apiUrl);
-
-    axios
-      .get(apiUrl)
+    // Fetch blog post data
+    fetchBlogById(id)
       .then((res) => {
-        if (res.data && res.data.data.length > 0) {
-          setBlog(res.data.data[0]);
-        } else {
-          setBlog(null);
-        }
+        setBlog(res);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("Error fetching blog:", err);
-        setBlog(null);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
+
+    // Fetch likes count
+    fetchLikes(id).then((count) => setLikes(count));
+
+    // Fetch comments
+    fetchComments(id).then((commentsData) => setComments(commentsData));
   }, [id]);
 
-  if (loading)
+  if (loading) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -44,21 +48,34 @@ const BlogPage = () => {
         Loading...
       </motion.div>
     );
+  }
 
-  if (!blog)
+  if (!blog) {
     return (
       <p className="text-center text-red-500 py-20">
         Blog not found. Please check the URL.
       </p>
     );
+  }
 
-  // Extract blog data
-  const { title, category, publishedAt, image } = blog || {};
-  const content = Array.isArray(blog.content) ? blog.content : [];
+  // Handle like functionality
+  const handleLike = () => {
+    postLike(id).then(() => setLikes(likes + 1));
+  };
 
-  // Image URL handling
-  const imageUrl = blog.image?.url
-    ? `http://localhost:1337${blog.image.url}`
+  // Handle new comment submission
+  const handleCommentSubmit = () => {
+    if (newComment.trim() === "") return;
+
+    postComment(id, newComment).then(() => {
+      setComments([...comments, { attributes: { text: newComment } }]); // Add new comment
+      setNewComment(""); // Clear comment input field
+    });
+  };
+
+  const { title, category, publishedAt, image, content } = blog;
+  const imageUrl = image?.url
+    ? `http://localhost:1337${image.url}`
     : "https://placehold.co/800x400";
 
   return (
@@ -81,6 +98,7 @@ const BlogPage = () => {
           ? new Date(publishedAt).toLocaleDateString("en-GB")
           : "Unknown"}
       </p>
+
       <div className="mt-6 text-lg text-gray-800 leading-relaxed text-justify">
         {content.length > 0 ? (
           content.map((item, index) => (
@@ -93,6 +111,50 @@ const BlogPage = () => {
         ) : (
           <p>No content available.</p>
         )}
+      </div>
+
+      <div className="mt-6">
+        <button
+          onClick={handleLike}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+        >
+          👍 Like ({likes})
+        </button>
+
+        <div className="mt-4">
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write a comment..."
+            className="w-full p-2 border rounded-md"
+          ></textarea>
+          <button
+            onClick={handleCommentSubmit}
+            className="bg-green-500 text-white px-4 py-2 mt-2 rounded-lg hover:bg-green-600"
+          >
+            Post Comment
+          </button>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-xl font-semibold">
+            Comments ({comments.length})
+          </h3>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div
+                key={comment.id}
+                className="mt-2 p-2 border rounded-md bg-gray-100"
+              >
+                <p>{comment.attributes.text}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">
+              No comments yet. Be the first to comment!
+            </p>
+          )}
+        </div>
       </div>
     </motion.div>
   );
