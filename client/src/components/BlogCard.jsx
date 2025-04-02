@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const BlogCard = ({ blog }) => {
   const imageUrl = blog.image?.url
     ? `http://localhost:1337${blog.image.url}`
-    : "https://via.placeholder.com/300";
+    : "https://placehold.co/800x400";
 
   return (
     <motion.div
@@ -28,7 +28,7 @@ const BlogCard = ({ blog }) => {
           {new Date(blog.publishedAt).toLocaleDateString()}
         </p>
         <Link
-          to={`/blog/${blog.id}`}
+          to={`/blog/${blog.documentId}`}
           className="inline-block mt-4 text-blue-500 font-medium hover:underline"
         >
           Read More →

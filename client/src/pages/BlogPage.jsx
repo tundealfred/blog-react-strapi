@@ -9,17 +9,19 @@ const BlogPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:1337/api/blogs/${id}?populate=*`)
-      .then((res) => {
-        if (res.data && res.data.data) {
-          const blogData = res.data.data;
+    if (!id) {
+      console.error("Blog ID is undefined.");
+      return;
+    }
 
-          if (blogData.id) {
-            setBlog(blogData);
-          } else {
-            setBlog(null);
-          }
+    const apiUrl = `http://localhost:1337/api/blogs?filters[documentId][$eq]=${id}&populate=*`;
+    //console.log("Fetching blog from:", apiUrl);
+
+    axios
+      .get(apiUrl)
+      .then((res) => {
+        if (res.data && res.data.data.length > 0) {
+          setBlog(res.data.data[0]);
         } else {
           setBlog(null);
         }
@@ -51,11 +53,13 @@ const BlogPage = () => {
     );
 
   // Extract blog data
-  const { title, category, publishedAt, content, image } = blog;
+  const { title, category, publishedAt, image } = blog || {};
+  const content = Array.isArray(blog.content) ? blog.content : [];
 
-  const imageUrl = image?.url
-    ? `http://localhost:1337${image.url}`
-    : "https://via.placeholder.com/800x400";
+  // Image URL handling
+  const imageUrl = blog.image?.url
+    ? `http://localhost:1337${blog.image.url}`
+    : "https://placehold.co/800x400";
 
   return (
     <motion.div
@@ -72,14 +76,22 @@ const BlogPage = () => {
       <h1 className="text-4xl font-bold mt-6 text-gray-900">{title}</h1>
       <p className="text-gray-600 text-sm mt-2">{category}</p>
       <p className="text-gray-500 text-sm">
-        Published on: {new Date(publishedAt).toLocaleDateString()}
+        Published on:{" "}
+        {publishedAt ? new Date(publishedAt).toLocaleDateString() : "Unknown"}
       </p>
-      <div
-        className="mt-6 text-lg text-gray-800 leading-relaxed"
-        dangerouslySetInnerHTML={{
-          __html: content.length ? content[0].text : "No content available.",
-        }}
-      />
+      <div className="mt-6 text-lg text-gray-800 leading-relaxed">
+        {content.length > 0 ? (
+          content.map((item, index) => (
+            <p key={index}>
+              {item.children.map((child, childIndex) => (
+                <span key={childIndex}>{child.text}</span>
+              ))}
+            </p>
+          ))
+        ) : (
+          <p>No content available.</p>
+        )}
+      </div>
     </motion.div>
   );
 };
