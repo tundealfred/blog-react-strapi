@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const BlogCard = ({ blog }) => {
+  console.log("Blog Data:", blog);
   const imageUrl = blog.image?.url
     ? `${import.meta.env.VITE_API_URL.replace("/api", "")}${blog.image.url}`
     : "https://placehold.co/800x400";
