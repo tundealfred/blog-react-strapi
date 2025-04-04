@@ -1,12 +1,19 @@
-// src/components/BlogCard.jsx
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const BlogCard = ({ blog }) => {
-  console.log("Blog Data:", blog);
-  const imageUrl = blog.image?.url
-    ? `${import.meta.env.VITE_API_URL.replace("/api", "")}${blog.image.url}`
-    : "https://placehold.co/800x400";
+  const getImageUrl = (blog) => {
+    if (blog.image?.url) {
+      return `${import.meta.env.VITE_API_URL.replace("/api", "")}${
+        blog.image.url
+      }`;
+    } else if (typeof blog.image === "string") {
+      return `${import.meta.env.VITE_API_URL.replace("/api", "")}${blog.image}`;
+    }
+    return "https://placehold.co/800x400";
+  };
+
+  const imageUrl = getImageUrl(blog);
 
   return (
     <motion.div
@@ -21,6 +28,10 @@ const BlogCard = ({ blog }) => {
         src={imageUrl}
         alt={blog.title}
         className="w-full h-56 object-cover"
+        onError={(e) => {
+          e.target.onerror = null; // Prevent infinite loop if placeholder also fails
+          e.target.src = "https://placehold.co/800x400";
+        }}
       />
       <div className="p-4">
         <h2 className="text-xl font-semibold text-gray-800">{blog.title}</h2>
