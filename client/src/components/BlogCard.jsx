@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const BlogCard = ({ blog }) => {
   const imageUrl = blog.image?.url
-    ? `https://blog-react-strapi-backend-production.up.railway.app${blog.image.url}`
+    ? `${import.meta.env.VITE_API_URL.replace("/api", "")}${blog.image.url}`
     : "https://placehold.co/800x400";
 
   return (

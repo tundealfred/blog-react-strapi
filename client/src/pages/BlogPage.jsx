@@ -75,7 +75,7 @@ const BlogPage = () => {
 
   const { title, category, publishedAt, image, content } = blog;
   const imageUrl = image?.url
-    ? `http://localhost:1337${image.url}`
+    ? `${import.meta.env.VITE_API_URL.replace("/api", "")}${image.url}`
     : "https://placehold.co/800x400";
 
   return (
