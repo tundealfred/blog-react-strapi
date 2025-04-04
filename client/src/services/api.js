@@ -17,9 +17,11 @@ export const fetchBlogs = async () => {
 };
 
 // Fetch a single blog post by ID
-export const fetchBlogById = async (id) => {
+export const fetchBlogById = async (documentId) => {
   try {
-    const response = await axios.get(`${API_URL}/blogs/${id}?populate=*`);
+    const response = await axios.get(
+      `${API_URL}/blogs/${documentId}?populate=*`
+    );
     return response.data.data;
   } catch (error) {
     console.error("Error fetching blog:", error);
