@@ -120,11 +120,16 @@ const Home = () => {
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           <AnimatePresence>
             {filteredBlogs.map((blog) => (
-              <motion.div key={blog.documentId} variants={item} layout>
+              <motion.div
+                key={blog.documentId}
+                variants={item}
+                layout
+                className="h-full" // Ensure all cards take full height
+              >
                 <BlogCard blog={blog} />
               </motion.div>
             ))}

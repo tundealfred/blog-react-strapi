@@ -18,33 +18,44 @@ const BlogCard = ({ blog }) => {
   return (
     <motion.div
       whileHover={{
-        scale: 1.05,
-        boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",
+        scale: 1.03,
+        boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.1)",
       }}
       transition={{ duration: 0.3 }}
-      className="border rounded-lg overflow-hidden shadow-md bg-white"
+      className="h-full flex flex-col border rounded-lg overflow-hidden shadow-sm bg-white"
     >
-      <img
-        src={imageUrl}
-        alt={blog.title}
-        className="w-full h-56 object-cover"
-        onError={(e) => {
-          e.target.onerror = null; // Prevent infinite loop if placeholder also fails
-          e.target.src = "https://placehold.co/800x400";
-        }}
-      />
-      <div className="p-4">
-        <h2 className="text-xl font-semibold text-gray-800">{blog.title}</h2>
-        <p className="text-gray-600 mt-2">{blog.category}</p>
-        <p className="text-gray-500 text-sm">
-          {new Date(blog.publishedAt).toLocaleDateString("en-GB")}
-        </p>
-        <Link
-          to={`/blog/${blog.documentId}`}
-          className="inline-block mt-4 text-blue-500 font-medium hover:underline"
-        >
-          Read More →
-        </Link>
+      <div className="aspect-w-16 aspect-h-9 overflow-hidden">
+        <img
+          src={imageUrl}
+          alt={blog.title}
+          className="w-full h-48 object-cover"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://placehold.co/800x400";
+          }}
+        />
+      </div>
+
+      <div className="p-5 flex flex-col flex-grow">
+        <h2 className="text-xl font-semibold text-gray-800 line-clamp-2 mb-2">
+          {blog.title}
+        </h2>
+        <div className="mt-auto">
+          <p className="text-sm font-medium text-indigo-600 mb-2">
+            {blog.category}
+          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-sm text-gray-500">
+              {new Date(blog.publishedAt).toLocaleDateString("en-GB")}
+            </p>
+            <Link
+              to={`/blog/${blog.documentId}`}
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
+            >
+              Read more →
+            </Link>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
