@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const BlogCard = ({ blog }) => {
   const imageUrl = blog.image?.url
-    ? `http://localhost:1337${blog.image.url}`
+    ? `https://blog-react-strapi-backend-production.up.railway.app/api${blog.image.url}`
     : "https://placehold.co/800x400";
 
   return (
