@@ -9,6 +9,15 @@ export const fetchBlogs = async () => {
   try {
     const response = await axios.get(`${API_URL}/blogs?populate=*`);
     console.log("Fetched data:", response.data.data); // Debugging
+    return response.data.data.map((blog) => ({
+      id: blog.id,
+      documentId: blog.documentId, // Ensure you're using the correct field
+      title: blog.title,
+      category: blog.category,
+      publishedAt: blog.publishedAt,
+      image: blog.image?.url || null,
+      content: blog.content || [],
+    }));
     return response.data.data;
   } catch (error) {
     console.error("Error fetching blogs:", error.message);
