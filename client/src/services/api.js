@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // Base URL for Strapi API
-const API_URL = process.env.REACT_APP_API_URL;
-// || "http://localhost:1337/api"; // Update if your Strapi is running on a different port
+const API_URL =
+  import.meta.env.REACT_APP_API_URL || "http://localhost:1337/api"; // Update if your Strapi is running on a different port
 
 console.log("API URL:", API_URL);
 
