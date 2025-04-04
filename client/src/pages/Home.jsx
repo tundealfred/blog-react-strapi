@@ -34,7 +34,7 @@ const Home = () => {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogs.map((blog) => (
-            <BlogCard key={blog.document.Id} blog={blog} />
+            <BlogCard key={blog.documentId} blog={blog} />
           ))}
         </div>
       )}
